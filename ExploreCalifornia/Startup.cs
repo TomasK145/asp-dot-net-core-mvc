@@ -25,9 +25,18 @@ namespace ExploreCalifornia
                 app.UseDeveloperExceptionPage();
             }
 
+            app.Use(async (context, next) => //Use + next --> definovania, ze ma byt po vykonani tohto middleware vykonany aj nasledujuci
+            {
+                if (context.Request.Path.Value.StartsWith("/hello")) //middleware vykonany len pri urcitej URL
+                {
+                    await context.Response.WriteAsync("Hello ASP.NET Core!");
+                }
+                await next();
+            });
+
             app.Run(async (context) =>
             {
-                await context.Response.WriteAsync("Hello World 123!");
+                await context.Response.WriteAsync("How are you?");
             });
         }
     }
