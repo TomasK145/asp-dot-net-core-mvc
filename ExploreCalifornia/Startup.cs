@@ -36,6 +36,8 @@ namespace ExploreCalifornia
                     DeveloperExceptions = _configuration.GetValue<bool>("FeatureToggles:EnableDeveloperExceptions")
                 };
             });
+
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,7 +65,12 @@ namespace ExploreCalifornia
                 }
 
                 await next();
-            }); 
+            });
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");
+            });
 
             app.UseFileServer(); //middleware sa pokusi zadanu URL previest na subor v wwwroot lokacii
             //wwwroot --> specialny folder oddelujuci staticke subory, ktore maju byt k dispozicii pre uzivatelov aplikacie od zvysku aplikacneho kodu
