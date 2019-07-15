@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -12,18 +13,40 @@ namespace ExploreCalifornia
 {
     public class Startup
     {
+        private readonly IConfiguration _configuration;
+
+        //IConfiguration --> ma pristup k Environment variables z property projektu, appsettings.json suboru, ...
+        public Startup(IConfiguration configuration) //pridanim tohto parametra do konstruktoru zabezpeci ASP.NET Core populate s internym config objektom, je vo forme Dictionary
+        {
+            _configuration = configuration;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddTransient --> kazde vyuzitie dependency ma vlastnu instanciu
+            //services.AddScoped --> vyuzitelna dependency vramci jedneho web requestu (umoznuje sharovanie vramci daneho web requestu)
+            //services.AddSingleton --> jedna instancia dependency pre cely lifetime aplikacie, pr. pre narocne instancie, pre instancie ktore niesu zavisle na konkretnych uzivatelov/requestoch, ...
+
+            services.AddTransient<FeatureToggles>(config =>  //umoznuje definovat ako bude object inicializovany pri injektovani
+            {
+                return new FeatureToggles
+                {
+                    DeveloperExceptions = _configuration.GetValue<bool>("FeatureToggles:EnableDeveloperExceptions")
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, FeatureToggles features)
         {
             loggerFactory.AddConsole();
 
-            if (env.IsDevelopment())
+            //if (env.IsDevelopment())
+            //if (_configuration["EnableDeveloperExceptions"] == "True")
+            //if (_configuration.GetValue<bool>("FeatureToggles:EnableDeveloperExceptions")) //config hodnota prevedena na pozadovany datovy typ
+            if (features.DeveloperExceptions) //citanie konfiguracie z custom triedy
             {
                 app.UseDeveloperExceptionPage(); //zabezpecuje zobrazenie developerskej error page
             }
