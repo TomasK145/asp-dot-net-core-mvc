@@ -10,10 +10,7 @@ namespace ExploreCalifornia.Controllers
     {
         public IActionResult Index()
         {
-            return new ContentResult
-            {
-                Content = "1"
-            };
+            return View(); //index.cshtml vznikol presunutim index.html z wwwroot (.html je validnym .cshtml suborom)
         }
     }
 }

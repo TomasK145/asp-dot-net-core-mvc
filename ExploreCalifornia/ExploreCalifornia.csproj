@@ -14,4 +14,8 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Views\Home\index.cshtml" />
+  </ItemGroup>
+
 </Project>
