@@ -38,6 +38,7 @@ namespace ExploreCalifornia
                     DeveloperExceptions = _configuration.GetValue<bool>("FeatureToggles:EnableDeveloperExceptions")
                 };
             });
+            services.AddTransient<FormattingService>();
 
             services.AddDbContext<BlogDataContext>(opt =>
             {
