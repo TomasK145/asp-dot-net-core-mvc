@@ -18,9 +18,34 @@ namespace ExploreCalifornia.Controllers
 
         [Route("")] //--> ak nema byt k url pridane nic dalsie mozno pouzit empty string;; aplikovanie route atributu na action odstrani tuto action ako kandidata na matchnutie routes definovanych v Startup
         //ak je definovany route v atribute pre action, jediny sposob ako action vykonat je matchnut definovanu route v atribute
-        public IActionResult Index()
+        //public IActionResult Index()
+        //{
+        //    var posts = _db.Posts.OrderByDescending(x => x.Posted).Take(5).ToArray();
+        //    return View(posts);
+        //}
+        public IActionResult Index(int page = 0)
         {
-            var posts = _db.Posts.OrderByDescending(x => x.Posted).Take(5).ToArray();
+            var pageSize = 2;
+            var totalPosts = _db.Posts.Count();
+            var totalPages = totalPosts / pageSize;
+            var previousPage = page - 1;
+            var nextPage = page + 1;
+
+            ViewBag.PreviousPage = previousPage;
+            ViewBag.HasPreviousPage = previousPage >= 0;
+            ViewBag.NextPage = nextPage;
+            ViewBag.HasNextPage = nextPage < totalPages;
+
+            var posts =
+                _db.Posts
+                    .OrderByDescending(x => x.Posted)
+                    .Skip(pageSize * page)
+                    .Take(pageSize)
+                    .ToArray();
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                return PartialView(posts);
+
             return View(posts);
         }
 
