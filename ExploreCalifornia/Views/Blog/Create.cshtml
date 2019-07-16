@@ -1,5 +1,5 @@
 ﻿@*Vyuzitie konkretneho tag helpera, * - referencovanie vsetkyhc tag helpers vramci assembly*@
-@addTagHelper "Microsoft.AspNetCore.Mvc.TagHelpers.FormTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers"
+@addTagHelper "*, Microsoft.AspNetCore.Mvc.TagHelpers"
 @model ExploreCalifornia.Models.Post
 @{
     Layout = "_Layout";
@@ -7,7 +7,8 @@
 <h1>Create blog post</h1>
 <fieldset>
     <form asp-action="Create" asp-controller="Blog">
-        <div asp-validation-summary="All" class="input-validation-error"></div> @*All - vsetky errory, ModelOnly - errors specificke pre properties, None - nezobrazi ziadne validation messages *@
+        <div asp-validation-summary="ModelOnly" class="input-validation-error"></div>
+        @*All - vsetky errory, ModelOnly - errors specificke pre properties, None - nezobrazi ziadne validation messages *@
         <p>
             <label asp-for="Title"></label>
             <input asp-for="Title" class="form-control" placeholder="Blog post title" />
@@ -24,21 +25,22 @@
     </form>
 
     @*@*Pouzitie HTML helpers
-    @using (Html.BeginForm()) //form
-    {
-        @Html.ValidationSummary()
-        <p>
-            @Html.LabelFor(x => x.Title)
-            @Html.EditorFor(x => x.Title) @*helper metoda vyrenderuje navhodnejsi HTML element pre danu property
-            @Html.ValidationMessageFor(x => x.Title)
-        </p>
-        <p>
-            @Html.LabelFor(x => x.Body)
-            @Html.TextAreaFor(x => x.Body)
-            @Html.ValidationMessageFor(x => x.Body)
-        </p>
-        <p>
-            <button type="submit">Create Post</button>
-        </p>
-    }*@
+        @using (Html.BeginForm()) //form
+        {
+            @Html.ValidationSummary()
+            <p>
+                @Html.LabelFor(x => x.Title)
+                @Html.EditorFor(x => x.Title) @*helper metoda vyrenderuje navhodnejsi HTML element pre danu property
+                @Html.ValidationMessageFor(x => x.Title)
+            </p>
+            <p>
+                @Html.LabelFor(x => x.Body)
+                @Html.TextAreaFor(x => x.Body)
+                @Html.ValidationMessageFor(x => x.Body)
+            </p>
+            <p>
+                <button type="submit">Create Post</button>
+            </p>
+        }*@
 </fieldset>
+

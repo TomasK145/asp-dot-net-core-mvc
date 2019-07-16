@@ -55,14 +55,12 @@ namespace ExploreCalifornia.Controllers
             _db.Posts.Add(post); //informuje co je treba urobit --> pridat entitu 
             _db.SaveChanges(); // vykonanie pozadovanych zmien  --> ulozenie do DB
 
-            return View();
-
-            //return RedirectToAction("Post", "Blog", new
-            //{
-            //    year = post.Posted.Year,
-            //    month = post.Posted.Month,
-            //    key = post.Key
-            //});
+            return RedirectToAction("Post", "Blog", new
+            {
+                year = post.Posted.Year,
+                month = post.Posted.Month,
+                key = post.Key
+            });
         }
     }
 }
